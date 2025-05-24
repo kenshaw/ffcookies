@@ -289,13 +289,13 @@ func Cookies(ctx context.Context, db DB, host string) ([]*Cookie, error) {
 func CookiesLikeHost(ctx context.Context, db DB, host string) ([]*Cookie, error) {
 	// query
 	const sqlstr = `SELECT ` +
+		`expiry, ` +
 		`host, ` +
 		`name, ` +
 		`value, ` +
 		`path, ` +
-		`expires_utc, ` +
 		`isSecure, ` +
-		`is_httponly ` +
+		`isHttpOnly ` +
 		`FROM moz_cookies ` +
 		`WHERE host_key LIKE $1`
 	// run

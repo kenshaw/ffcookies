@@ -46,13 +46,13 @@ dbtpl query "$SQDB" \
   --single=models.go \
 << 'ENDSQL'
 SELECT
+  expiry,
   host,
   name,
   value,
   path,
-  expires_utc,
   isSecure,
-  is_httponly
+  isHttpOnly
 FROM moz_cookies
 WHERE host_key LIKE %%host string%%
 ENDSQL
