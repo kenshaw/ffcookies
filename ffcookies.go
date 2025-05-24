@@ -170,7 +170,7 @@ func ReadJarFilteredContext(ctx context.Context, profile, urlstr string, f func(
 // ReadJarFiltered reads the cookies from the provided sqlite3 file for the
 // provided url into a cookie jar (usable with http.Client) consisting of
 // cookies passed through filter func f.
-func ReadJarFiltered(ctx context.Context, profile, urlstr string, f func(*http.Cookie) bool) (http.CookieJar, error) {
+func ReadJarFiltered(profile, urlstr string, f func(*http.Cookie) bool) (http.CookieJar, error) {
 	return ReadJarFilteredContext(context.Background(), profile, urlstr, f)
 }
 
