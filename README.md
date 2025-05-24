@@ -1,6 +1,6 @@
 # ffcookies
 
-Package `ffcookies` provides a quick way to decode Chrome browser cookies for
+Package `ffcookies` provides a quick way to decode Firefox browser cookies for
 use with Go's standard HTTP libraries.
 
 ## Example
