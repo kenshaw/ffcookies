@@ -54,5 +54,5 @@ SELECT
   isSecure,
   isHttpOnly
 FROM moz_cookies
-WHERE host_key LIKE %%host string%%
+WHERE host LIKE %%host string%%
 ENDSQL
