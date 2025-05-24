@@ -2,7 +2,7 @@
 
 SRC=$(realpath $(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd))
 
-SQDB=sq:"$(realpath $HOME/.mozilla/firefox/*.default-release/cookies.sqlite)?mode=ro"
+SQDB=sq:"file:$(realpath $HOME/.mozilla/firefox/*.default-release/cookies.sqlite)?nolock=1&immutable=1&mode=ro"
 
 set -x
 
@@ -53,6 +53,6 @@ SELECT
   expires_utc,
   isSecure,
   is_httponly
-FROM cookies
+FROM moz_cookies
 WHERE host_key LIKE %%host string%%
 ENDSQL

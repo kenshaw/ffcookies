@@ -296,7 +296,7 @@ func CookiesLikeHost(ctx context.Context, db DB, host string) ([]*Cookie, error)
 		`expires_utc, ` +
 		`isSecure, ` +
 		`is_httponly ` +
-		`FROM cookies ` +
+		`FROM moz_cookies ` +
 		`WHERE host_key LIKE $1`
 	// run
 	logf(sqlstr, host)
