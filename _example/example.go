@@ -22,7 +22,7 @@ func main() {
 }
 
 func run(ctx context.Context, profile, host string) error {
-	cookies, err := ffcookies.ReadContext(ctx, profile, host)
+	cookies, err := ffcookies.Read(ctx, profile, host)
 	if err != nil {
 		return err
 	}
