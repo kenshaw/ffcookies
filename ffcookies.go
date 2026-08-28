@@ -50,8 +50,8 @@ Indexes:
 
 */
 
-// ReadFileContext reads the cookies from the provided sqlite3 file on disk.
-func ReadFileContext(ctx context.Context, file, host string) ([]*http.Cookie, error) {
+// ReadFile reads the cookies from the provided sqlite3 file on disk.
+func ReadFile(ctx context.Context, file, host string) ([]*http.Cookie, error) {
 	// check sqlite driver
 	driver := driverName()
 	if driver == "" {
@@ -76,14 +76,9 @@ func ReadFileContext(ctx context.Context, file, host string) ([]*http.Cookie, er
 	return models.Convert(res), nil
 }
 
-// ReadFile reads the cookies from the provided sqlite3 file on disk.
-func ReadFile(file, host string) ([]*http.Cookie, error) {
-	return ReadFileContext(context.Background(), file, host)
-}
-
-// ReadContext reads the cookies for the provided Firefox profile name, or the
+// Read reads the cookies for the provided Firefox profile name, or the
 // default Firefox profile.
-func ReadContext(ctx context.Context, profile, host string) ([]*http.Cookie, error) {
+func Read(ctx context.Context, profile, host string) ([]*http.Cookie, error) {
 	profileDir := profileDir()
 	if profileDir == "" {
 		return nil, errors.New("cannot determine the firefox profile directory")
@@ -92,12 +87,7 @@ func ReadContext(ctx context.Context, profile, host string) ([]*http.Cookie, err
 	if err != nil {
 		return nil, err
 	}
-	return ReadFileContext(ctx, "file:"+cookiePath+DefaultOpenParams, host)
-}
-
-// Read reads the cookies for the provided Firefox profile name.
-func Read(profile, host string) ([]*http.Cookie, error) {
-	return ReadContext(context.Background(), profile, host)
+	return ReadFile(ctx, "file:"+cookiePath+DefaultOpenParams, host)
 }
 
 // Jar builds a cookie jar for the url from provided cookies.
@@ -113,9 +103,9 @@ func Jar(u *url.URL, cookies ...*http.Cookie) (http.CookieJar, error) {
 	return jar, nil
 }
 
-// ReadJarContext reads the cookies from the provided sqlite3 file for the provided
+// ReadJar reads the cookies from the provided sqlite3 file for the provided
 // url into a cookie jar usable with http.Client.
-func ReadJarContext(ctx context.Context, profile, urlstr string) (http.CookieJar, error) {
+func ReadJar(ctx context.Context, profile, urlstr string) (http.CookieJar, error) {
 	// read cookies
 	u, err := url.Parse(urlstr)
 	if err != nil {
@@ -126,23 +116,17 @@ func ReadJarContext(ctx context.Context, profile, urlstr string) (http.CookieJar
 	default:
 		return nil, fmt.Errorf("invalid url scheme %q", u.Scheme)
 	}
-	cookies, err := ReadContext(ctx, profile, u.Host)
+	cookies, err := Read(ctx, profile, u.Host)
 	if err != nil {
 		return nil, err
 	}
 	return Jar(u, cookies...)
 }
 
-// ReadJar reads the cookies from the provided sqlite3 file for the provided
-// url into a cookie jar usable with http.Client.
-func ReadJar(profile, urlstr string) (http.CookieJar, error) {
-	return ReadJarContext(context.Background(), profile, urlstr)
-}
-
-// ReadJarFilteredContext reads the cookies from the provided sqlite3 file for
-// the provided url into a cookie jar (usable with http.Client) consisting of
+// ReadJarFiltered reads the cookies from the provided sqlite3 file for the
+// provided url into a cookie jar (usable with http.Client) consisting of
 // cookies passed through filter func f.
-func ReadJarFilteredContext(ctx context.Context, profile, urlstr string, f func(*http.Cookie) bool) (http.CookieJar, error) {
+func ReadJarFiltered(ctx context.Context, profile, urlstr string, f func(*http.Cookie) bool) (http.CookieJar, error) {
 	// read cookies
 	u, err := url.Parse(urlstr)
 	if err != nil {
@@ -153,7 +137,7 @@ func ReadJarFilteredContext(ctx context.Context, profile, urlstr string, f func(
 	default:
 		return nil, fmt.Errorf("invalid url scheme %q", u.Scheme)
 	}
-	cookies, err := ReadContext(ctx, profile, u.Host)
+	cookies, err := Read(ctx, profile, u.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -165,13 +149,6 @@ func ReadJarFilteredContext(ctx context.Context, profile, urlstr string, f func(
 		}
 	}
 	return Jar(u, c...)
-}
-
-// ReadJarFiltered reads the cookies from the provided sqlite3 file for the
-// provided url into a cookie jar (usable with http.Client) consisting of
-// cookies passed through filter func f.
-func ReadJarFiltered(profile, urlstr string, f func(*http.Cookie) bool) (http.CookieJar, error) {
-	return ReadJarFilteredContext(context.Background(), profile, urlstr, f)
 }
 
 // driverName returns the first sqlite3 driver name it encounters.
