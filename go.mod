@@ -1,5 +1,5 @@
 module github.com/kenshaw/ffcookies
 
-go 1.24.3
+go 1.27.0
 
-require golang.org/x/net v0.40.0
+require golang.org/x/net v0.58.0
